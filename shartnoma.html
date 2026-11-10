@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<title>Do'kon CRM - Muddatli To'lov va Shartnoma</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+body { background: #eef2f6; color: #1e293b; padding: 20px; }
+h1 { text-align: center; margin-bottom: 20px; font-size: 22px; color: #0f172a; }
+.grid { max-width: 1050px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media (max-width: 800px) { .grid { grid-template-columns: 1fr; } }
+.box, .full { background: #fff; padding: 20px; border-radius: 14px; box-shadow: 0 3px 12px rgba(0,0,0,0.06); }
+.full { max-width: 1050px; margin: 20px auto 0 auto; }
+h2 { font-size: 17px; color: #1d4ed8; margin-bottom: 14px; border-bottom: 2px solid #eff6ff; padding-bottom: 8px; }
+label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 4px; color: #475569; }
+input, select { width: 100%; padding: 9px 11px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; margin-bottom: 10px; }
+.blue-card { background: linear-gradient(135deg, #1d4ed8, #2563eb); color: #fff; padding: 16px; border-radius: 12px; text-align: center; margin-bottom: 15px; }
+.blue-card strong { font-size: 26px; display: block; margin-top: 4px; }
+.info-list { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; margin-bottom: 15px; }
+.info-row { display: flex; justify-content: space-between; margin-bottom: 7px; font-size: 14px; }
+.info-tot { border-top: 2px dashed #cbd5e1; padding-top: 8px; font-size: 16px; font-weight: bold; color: #16a34a; }
+button { width: 100%; padding: 12px; border: none; border-radius: 9px; color: #fff; font-weight: bold; font-size: 14px; cursor: pointer; margin-bottom: 8px; }
+.btn-save { background: #059669; }
+.btn-word { background: #1d4ed8; }
+.search-box { background: #eff6ff; border: 2px solid #3b82f6; font-size: 16px; padding: 12px; }
+.client-card { border: 1px solid #cbd5e1; border-radius: 12px; padding: 15px; margin-bottom: 15px; background: #f8fafc; }
+.c-top { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 10px; }
+.pay-bar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 10px; }
+.pay-bar input { width: 200px; margin: 0; }
+.btn-deduct { background: #16a34a; width: auto; padding: 9px 16px; margin: 0; }
+.btn-del { background: #dc2626; width: auto; padding: 9px 12px; margin: 0; }
+.history { font-size: 12px; color: #475569; margin-top: 8px; background: #fff; padding: 8px; border-radius: 8px; border: 1px solid #e2e8f0; }
+</style>
+</head>
+<body>
+
+<h1>Maishiy Texnika Do'koni — Muddatli To'lov va Mijozlar Bazasi</h1>
+
+<div class="grid">
+  <div class="box">
+    <h2>1. Yangi Mijozni Ro'yxatga Olish</h2>
+    <label>Mijoz F.I.Sh:</label>
+    <input id="ism" placeholder="Masalan: Xakimjonov Muhammadjon">
+    <label>Yashash manzili:</label>
+    <input id="manzil" placeholder="Guliston shahar, Nihol mahallasi">
+    <label>Telefon raqami:</label>
+    <input id="tel" placeholder="+998 77 701 02 71">
+    <label>Pasport seriya va raqami:</label>
+    <input id="pasport" placeholder="AE 4560895">
+    <label>Olingan mahsulot nomi:</label>
+    <input id="tovar" placeholder="Hofman Avtomat kir yuvish mashinasi 8 KG">
+    <label>Asl narxi (so'm):</label>
+    <input type="number" id="narx" value="5000000" onkeyup="hisobla()" onchange="hisobla()">
+    <label>Boshlang'ich to'lov (so'm):</label>
+    <input type="number" id="bosh" value="1000000" onkeyup="hisobla()" onchange="hisobla()">
+    <label>Muddat (oy):</label>
+    <select id="oy" onchange="hisobla()">
+      <option value="3">3 oy</option>
+      <option value="6">6 oy</option>
+      <option value="9">9 oy</option>
+      <option value="12" selected>12 oy</option>
+      <option value="18">18 oy</option>
+      <option value="24">24 oy</option>
+    </select>
+    <label>Yillik ustama (%):</label>
+    <input type="number" id="foiz" value="24" onkeyup="hisobla()" onchange="hisobla()">
+  </div>
+
+  <div class="box">
+    <h2>2. Avtomatik Hisob-kitob va Shartnoma</h2>
+    <div class="blue-card">
+      <span>Har oylik to'lov summasi:</span>
+      <strong id="oylik_txt">0 so'm</strong>
+    </div>
+    <div class="info-list">
+      <div class="info-row"><span>Mahsulot narxi:</span><b id="narx_txt">0 so'm</b></div>
+      <div class="info-row"><span>Boshlang'ich to'lov:</span><b id="bosh_txt">0 so'm</b></div>
+      <div class="info-row"><span>Asosiy qarz:</span><b id="qarz_txt">0 so'm</b></div>
+      <div class="info-row"><span>Ustama summasi:</span><b id="ustama_txt">0 so'm</b></div>
+      <div class="info-row info-tot"><span>Jami to'lanadigan summa:</span><b id="jami_txt">0 so'm</b></div>
+    </div>
+    <button class="btn-save" onclick="saqlash()">+ Mijozni Bazaga Saqlash</button>
+    <button class="btn-word" onclick="wordYukla()">Chiroyli Word (.doc) Shartnomani Yuklash</button>
+  </div>
+</div>
+
+<!-- 3. QIDIRUV VA TO'LOVNI ASOSIY SUMMADAN O'CHIRISH -->
+<div class="full">
+  <h2>3. Mijozni Qidirish va To'lovni Asosiy Qarzdan O'chirish</h2>
+  <input class="search-box" id="qidiruv" onkeyup="chiqar()" placeholder="Mijoz ismini yoki telefon raqamini yozing (darhol chiqadi)...">
+  <div id="mijozlar_royxati"></div>
+</div>
+
+<script>
+function pul(n) {
+  return Math.round(n).toLocaleString("ru-RU") + " so'm";
+}
+
+function hisobla() {
+  var narx = Number(document.getElementById("narx").value) || 0;
+  var bosh = Number(document.getElementById("bosh").value) || 0;
+  var oy = Number(document.getElementById("oy").value) || 1;
+  var foiz = Number(document.getElementById("foiz").value) || 0;
+
+  var qarz = narx > bosh ? narx - bosh : 0;
+  var ustama = qarz * (foiz / 100) * (oy / 12);
+  var jamiQarz = Math.round(qarz + ustama);
+  var oylik = Math.round(jamiQarz / oy);
+  var jami = bosh + jamiQarz;
+
+  document.getElementById("oylik_txt").innerText = pul(oylik);
+  document.getElementById("narx_txt").innerText = pul(narx);
+  document.getElementById("bosh_txt").innerText = pul(bosh);
+  document.getElementById("qarz_txt").innerText = pul(qarz);
+  document.getElementById("ustama_txt").innerText = pul(ustama);
+  document.getElementById("jami_txt").innerText = pul(jami);
+
+  return { narx: narx, bosh: bosh, oy: oy, oylik: oylik, jamiQarz: jamiQarz, jami: jami };
+}
+
+function saqlash() {
+  var ism = document.getElementById("ism").value.trim();
+  if (!ism) return alert("Mijoz ism-familyasini kiriting!");
+  var h = hisobla();
+  var db = JSON.parse(localStorage.getItem("dokon_baza_v2") || "[]");
+  db.unshift({
+    id: Date.now(),
+    ism: ism,
+    manzil: document.getElementById("manzil").value || "Kiritilmagan",
+    tel: document.getElementById("tel").value || "-",
+    pasport: document.getElementById("pasport").value || "-",
+    tovar: document.getElementById("tovar").value || "Mahsulot",
+    jamiQarz: h.jamiQarz,
+    qolganQarz: h.jamiQarz,
+    oylik: h.oylik,
+    jamiOy: h.oy,
+    tolovlar: []
+  });
+  localStorage.setItem("dokon_baza_v2", JSON.stringify(db));
+  chiqar();
+  alert("Mijoz bazaga muvaffaqiyatli saqlandi!");
+}
+
+// ASOSIY SUMMADAN TO'LOVNI O'CHIRISH (AYIRISH)
+function tolovOchir(id) {
+  var input = document.getElementById("summa_" + id);
+  var summa = Number(input.value) || 0;
+  if (summa <= 0) return alert("To'lov summasini kiriting!");
+
+  var db = JSON.parse(localStorage.getItem("dokon_baza_v2") || "[]");
+  for (var i = 0; i < db.length; i++) {
+    if (db[i].id === id) {
+      if (summa > db[i].qolganQarz) summa = db[i].qolganQarz;
+      db[i].qolganQarz -= summa;
+      var bugun = new Date().toLocaleDateString("uz-UZ");
+      db[i].tolovlar.push({ sana: bugun, summa: summa });
+      break;
+    }
+  }
+  localStorage.setItem("dokon_baza_v2", JSON.stringify(db));
+  chiqar();
+}
+
+function mijozOchir(id) {
+  if (!confirm("Rostdan ham bu mijozni bazadan o'chirasizmi?")) return;
+  var db = JSON.parse(localStorage.getItem("dokon_baza_v2") || "[]");
+  db = db.filter(function(x) { return x.id !== id; });
+  localStorage.setItem("dokon_baza_v2", JSON.stringify(db));
+  chiqar();
+}
+
+function chiqar() {
+  var qidiruv = document.getElementById("qidiruv").value.toLowerCase();
+  var db = JSON.parse(localStorage.getItem("dokon_baza_v2") || "[]");
+  var html = "";
+
+  for (var i = 0; i < db.length; i++) {
+    var m = db[i];
+    if (m.ism.toLowerCase().indexOf(qidiruv) === -1 && m.tel.indexOf(qidiruv) === -1) continue;
+
+    var tolanganJami = m.jamiQarz - m.qolganQarz;
+    var tarix = "";
+    for (var j = 0; j < m.tolovlar.length; j++) {
+      tarix += (j + 1) + "-to'lov: <b>" + pul(m.tolovlar[j].summa) + "</b> (" + m.tolovlar[j].sana + ") | ";
+    }
+
+    html += "<div class='client-card'>";
+    html += "<div class='c-top'><div><b style='font-size:17px; color:#1d4ed8;'>" + m.ism + "</b><br>";
+    html += "<small>Manzil: " + m.manzil + " | Tel: " + m.tel + " | Pasport: " + m.pasport + "</small></div>";
+    html += "<div style='text-align:right;'><b>Mahsulot: " + m.tovar + "</b><br>";
+    html += "<small>Oylik to'lov: " + pul(m.oylik) + " (" + m.jamiOy + " oy)</small></div></div>";
+
+    html += "<div style='display:flex; gap:20px; flex-wrap:wrap; font-size:14px;'>";
+    html += "<div>Umumiy qarz: <b>" + pul(m.jamiQarz) + "</b></div>";
+    html += "<div style='color:#059669;'>To'langan (" + m.tolovlar.length + " marta): <b>" + pul(tolanganJami) + "</b></div>";
+    html += "<div style='color:#dc2626;'>Qolgan asosiy qarz: <b style='font-size:16px;'>" + pul(m.qolganQarz) + "</b></div>";
+    html += "</div>";
+
+    if (m.qolganQarz > 0) {
+      html += "<div class='pay-bar'>";
+      html += "<input type='number' id='summa_" + m.id + "' value='" + m.oylik + "' placeholder='Summa'>";
+      html += "<button class='btn-deduct' onclick='tolovOchir(" + m.id + ")'>Asosiy qarzdan o'chirish (-)</button>";
+      html += "<button class='btn-del' onclick='mijozOchir(" + m.id + ")'>O'chirish</button>";
+      html += "</div>";
+    } else {    
+      html += "<div class='pay-bar'><b style='color:#059669;'>QARZ YOPILGAN!</b> <button class='btn-del' onclick='mijozOchir(" + m.id + ")'>O'chirish</button></div>";
+    }
+    html += "<div class='history'><b>To'lovlar tarixi (" + m.tolovlar.length + " marta):</b> " + (tarix || "Hali yo'q") + "</div></div>";
+  }
+  document.getElementById("mijozlar_royxati").innerHTML = html || "<p style='text-align:center;color:#64748b;'>Mijoz topilmadi</p>";
+}
+
+function wordYukla() {
+  var h = hisobla();
+  var ism = document.getElementById("ism").value || "_____________________";
+  var manzil = document.getElementById("manzil").value || "_____________________";
+  var tel = document.getElementById("tel").value || "______________";
+  var pasport = document.getElementById("pasport").value || "__________";
+  var tovar = document.getElementById("tovar").value || "_____________________";
+  var bugun = new Date();
+  var jadval = "";
+
+  for (var i = 1; i <= h.oy; i++) {
+    var sana = new Date(bugun.getFullYear(), bugun.getMonth() + i, bugun.getDate()).toLocaleDateString("uz-UZ");
+    jadval += "<tr><td style='border:1px solid #333;padding:5px;text-align:center;'>" + i + "</td>";
+    jadval += "<td style='border:1px solid #333;padding:5px;text-align:center;'>" + sana + "</td>";
+    jadval += "<td style='border:1px solid #333;padding:5px;text-align:right;'><b>" + pul(h.oylik) + "</b></td>";
+    jadval += "<td style='border:1px solid #333;padding:5px;'></td></tr>";
+  }
+
+  var doc = "<meta charset='utf-8'><div style='font-family:Times New Roman;padding:15px;border:2px solid #1e3a8a;'>";
+  doc += "<div style='background:#1e3a8a;color:#fff;padding:10px;text-align:center;'><h2>MUDDATLI TO'LOV SHARTNOMASI</h2>";
+  doc += "<p>Sana: " + bugun.toLocaleDateString("uz-UZ") + "</p></div>";
+  doc += "<table style='width:100%;border-collapse:collapse;margin-top:15px;'>";
+  doc += "<tr><td style='border:1px solid #333;padding:6px;background:#f1f5f9;'><b>Xaridor:</b></td><td style='border:1px solid #333;padding:6px;'>" + ism + "</td></tr>";
+  doc += "<tr><td style='border:1px solid #333;padding:6px;background:#f1f5f9;'><b>Manzil:</b></td><td style='border:1px solid #333;padding:6px;'>" + manzil + "</td></tr>";
+  doc += "<tr><td style='border:1px solid #333;padding:6px;background:#f1f5f9;'><b>Pasport / Tel:</b></td><td style='border:1px solid #333;padding:6px;'>" + pasport + " | " + tel + "</td></tr>";
+  doc += "<tr><td style='border:1px solid #333;padding:6px;background:#f1f5f9;'><b>Mahsulot:</b></td><td style='border:1px solid #333;padding:6px;'><b>" + tovar + "</b></td></tr>";
+  doc += "<tr><td style='border:1px solid #333;padding:6px;background:#f1f5f9;'><b>Narxi / Boshlang'ich:</b></td><td style='border:1px solid #333;padding:6px;'>" + pul(h.narx) + " / " + pul(h.bosh) + "</td></tr>";
+  doc += "<tr><td style='border:1px solid #333;padding:6px;background:#f1f5f9;'><b>Muddat / Oylik:</b></td><td style='border:1px solid #333;padding:6px;'><b>" + h.oy + " oy</b> | <b>" + pul(h.oylik) + "</b></td></tr>";
+  doc += "<tr><td style='border:1px solid #333;padding:6px;background:#f1f5f9;'><b>Jami summa:</b></td><td style='border:1px solid #333;padding:6px;color:green;'><b>" + pul(h.jami) + "</b></td></tr></table>";
+  doc += "<h3 style='color:#1e3a8a;margin-top:15px;'>TO'LOVLAR JADVALI</h3>";
+  doc += "<table style='width:100%;border-collapse:collapse;'><tr style='background:#1e3a8a;color:#fff;'><th style='border:1px solid #333;'>Oy</th><th style='border:1px solid #333;'>Sana</th><th style='border:1px solid #333;'>Summa</th><th style='border:1px solid #333;'>Imzo</th></tr>" + jadval + "</table>";
+  doc += "<p style='margin-top:25px;'><b>SOTUVCHI:</b> _______________ &nbsp;&nbsp;&nbsp;&nbsp; <b>XARIDOR:</b> _______________ (" + ism + ")</p></div>";
+
+  var a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob(["\ufeff", doc], { type: "application/msword" }));
+  a.download = "Shartnoma.doc";
+  a.click();
+}
+
+hisobla();
+chiqar();
+</script>
+</body>
+</html>
+
